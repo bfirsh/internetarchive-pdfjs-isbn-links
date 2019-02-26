@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "PDF Viewer",
+  "name": "PDF.js with Internet Archive ISBN links",
   "version": "2.2.15",
-  "description": "Uses HTML5 to display PDF files directly in the browser.",
+  "description": "Makes any link that looks like an ISBN a link to the Internet Archive.",
   "icons": {
     "128": "icon128.png",
     "48": "icon48.png",
