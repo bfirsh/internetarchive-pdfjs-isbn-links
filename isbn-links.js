@@ -21,8 +21,10 @@ function findISBNs() {
 
   while (treeWalker.nextNode()) {
     let node = treeWalker.currentNode;
-    const parentName = node.parentNode.nodeName;
-    if (parentName === "SCRIPT" || parentName === "STYLE") {
+    if (
+      node.parentNode.nodeName === "SCRIPT" ||
+      node.parentNode.nodeName === "STYLE"
+    ) {
       continue;
     }
     if (!ISBN_TEXT_REGEX.exec(node.data)) {
@@ -44,14 +46,40 @@ function findISBNs() {
     }
 
     const isbn = match[0];
+
+    if (node.parentNode.nodeName === "A") {
+      console.log("Skipping ISBN because it is already a link", isbn);
+      continue;
+    }
+
     console.log("Found ISBN!", isbn);
 
     isbnToArchiveID(isbn).then(function(archiveID) {
       if (archiveID) {
         console.log("Found archiveID!", archiveID);
+        addLinkFromRegexpMatch(
+          node,
+          match,
+          "https://archive.org/details/" + archiveID
+        );
       } else {
-        console.log("No archiveID found")
+        console.log("No archiveID found for ", isbn);
       }
     });
   }
+}
+
+function addLinkFromRegexpMatch(node, match, href) {
+  // Split at start of match
+  const linkText = node.splitText(match.index);
+  // Split at end of match, discarding tail node
+  linkText.splitText(match[0].length);
+
+  const link = document.createElement("a");
+  link.setAttribute("href", href);
+  link.setAttribute("target", "_blank");
+
+  // Insert link into DOM then move the text into the link
+  linkText.parentNode.insertBefore(link, linkText);
+  link.appendChild(linkText);
 }

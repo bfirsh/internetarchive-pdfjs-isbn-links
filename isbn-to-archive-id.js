@@ -82,22 +82,21 @@
   }
 
   // lifted from https://medium.freecodecamp.org/understanding-memoize-in-javascript-51d07d19430e
-  const memoize = (fn) => {
+  const memoize = fn => {
     let cache = {};
     return (...args) => {
-      let n = args[0];  // just taking one argument here
+      let n = args[0]; // just taking one argument here
       if (n in cache) {
-        console.log('Fetching from cache');
+        console.log("Fetching from cache");
         return cache[n];
-      }
-      else {
-        console.log('Calculating result');
+      } else {
+        console.log("Calculating result");
         let result = fn(n);
         cache[n] = result;
         return result;
       }
-    }
-  }
+    };
+  };
 
   // HACK: export
   window.isbnToArchiveID = memoize(function(isbn) {
@@ -115,6 +114,6 @@
           return null;
         }
         return result.response.docs[0].identifier;
-      }));
-  };
+      });
+  });
 })();
